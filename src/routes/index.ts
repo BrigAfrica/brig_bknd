@@ -1,7 +1,7 @@
 import { Express, Router } from "express"; 'express';
 import validateSchema from 'middlewares/validateSchema';
 import { emailSchema } from 'schemas/emails';
-import { addEmailToNewsletter } from 'controllers/emails';
+import { addEmailToNewsletter } from 'controllers/emails.controller';
 
 const setupRoutes = (app: Express) => {
   const baseRouter = Router();

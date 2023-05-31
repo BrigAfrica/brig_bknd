@@ -5,11 +5,12 @@ import { DEBUG, PORT } from 'config';
 import express from "express";
 import morgan from "morgan";
 import setupRoutes from 'routes';
+import helmet from "helmet";
 
 const port = PORT // default port to listen
 const app = express();
 
-
+app.use(helmet())
 app.use(morgan(DEBUG ? 'dev' : 'combined'))
 // middlewares for parsing json and urlencoded form data
 app.use(express.urlencoded({ extended: true }))
