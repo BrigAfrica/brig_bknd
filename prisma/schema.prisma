@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model brig_newsletter {
@@ -13,44 +13,54 @@ model brig_newsletter {
 }
 
 model user {
-      id Int @id @default(autoincrement())
-      name String
-      email String @unique
-      password String
-      createdAt DateTime @default(now())
-      updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model repairs {
-  id      Int      @id @default(autoincrement())
-  firstname    String
-  surname    String
-  email   String   @unique
-  phone   String
-  deviceType String
-  service String
+  id            Int      @id @default(autoincrement())
+  firstname     String
+  surname       String
+  email         String   @unique
+  phone         String
+  deviceType    String
+  service       String
   dateAvailable String
   timeAvailable String
-  fileSource String
-  fileUrl  String?
-  updates Boolean
-  createdAt DateTime @default(now())
+  fileSource    String
+  fileUrl       String?
+  updates       Boolean
+  createdAt     DateTime @default(now())
 }
 
 model category {
-  id      Int      @id @default(autoincrement())
-  name    String
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  product   product[]
 }
 
 model brand {
-  id      Int      @id @default(autoincrement())
-  name    String
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  product   product[]
 }
 
-model product{
-  id      Int      @id @default(autoincrement())
-  name    String
-  price   Decimal
+model product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Decimal
+  categoryId  Int      @map("category_id")
+  category    category @relation(fields: [categoryId], references: [id])
+  brandId     Int      @map("brand_id")
+  brand       brand    @relation(fields: [brandId], references: [id])
+  quantity    Int
+  description String?
+  memory      String
+  storage     String
 }
