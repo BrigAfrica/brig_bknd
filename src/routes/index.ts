@@ -2,11 +2,11 @@ import { Express, Router } from "express"; 'express';
 import validateSchema from 'middlewares/validateSchema';
 import { emailSchema } from 'schemas/emails';
 import { repairDetailsSchema } from 'schemas/repairs';
-import { categorySchema, brandSchema } from 'schemas/products';
+import { categorySchema, brandSchema, productSchema } from 'schemas/products';
 import { addEmailToNewsletter } from 'controllers/emails.controller';
 import { repairAppointmentForm } from 'controllers/repairs.controller';
 import { addCategory, updateCategory, deleteCategory, getAllCategories } from 'controllers/category.controller';
-import {  addBrand, updateBrand, deleteBrand, getAllBrands } from 'controllers/brands.controller';
+import { addBrand, updateBrand, deleteBrand, getAllBrands } from 'controllers/brands.controller';
 
 const setupRoutes = (app: Express) => {
   const baseRouter = Router();

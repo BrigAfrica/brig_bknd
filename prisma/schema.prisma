@@ -61,6 +61,9 @@ model product {
   brand       brand    @relation(fields: [brandId], references: [id])
   quantity    Int
   description String?
-  memory      String
-  storage     String
+  memory      String?
+  storage     String?
+  image1      String?
+  image2      String?
+  image3      String?
 }
