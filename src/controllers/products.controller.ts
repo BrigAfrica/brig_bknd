@@ -48,8 +48,8 @@ export const createProduct: RequestHandler = async (req, res) => {
         memory: body.memory,
         storage: body.storage,
         image1: body.image1,
-        image2: body.image1,
-        image3: body.image1
+        image2: body.image2,
+        image3: body.image3
       }
     })
 
