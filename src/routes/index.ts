@@ -7,6 +7,7 @@ import { addEmailToNewsletter } from 'controllers/emails.controller';
 import { repairAppointmentForm } from 'controllers/repairs.controller';
 import { addCategory, updateCategory, deleteCategory, getAllCategories } from 'controllers/category.controller';
 import { addBrand, updateBrand, deleteBrand, getAllBrands } from 'controllers/brands.controller';
+import { addProduct, updateProduct, deleteProduct, getAllProducts, getIdProducts, advancedSearchProducts } from 'controllers/products.controller';
 
 const setupRoutes = (app: Express) => {
   const baseRouter = Router();
@@ -20,7 +21,12 @@ const setupRoutes = (app: Express) => {
   baseRouter.put('/updateBrand/:id', validateSchema(brandSchema), updateBrand)
   baseRouter.delete('/deleteBrand/:id', deleteBrand)
   baseRouter.get('/getAllBrands', getAllBrands)
-
+  baseRouter.post('/addProduct', validateSchema(productSchema), addProduct)
+  baseRouter.put('/updateProduct/:id', validateSchema(productSchema), updateProduct)
+  baseRouter.delete('/deleteProduct/:id', deleteProduct)
+  baseRouter.get('/getAllProducts', getAllProducts)
+  baseRouter.get('/getIdProducts/:id', getIdProducts)
+  baseRouter.get('/products/search', advancedSearchProducts);
 
   // apply routers
   app.use('/', baseRouter);
