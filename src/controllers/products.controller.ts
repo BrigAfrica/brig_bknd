@@ -18,9 +18,6 @@ export const addProduct: RequestHandler = async (req, res) => {
       data: {
         name: body.name,
         price: body.price,
-        category: {
-          connect: { id: body.categoryId}
-        },
         categoryId: body.categoryId,
         brandId: body.brandId,
         quantity: body.quantity,
@@ -29,7 +26,8 @@ export const addProduct: RequestHandler = async (req, res) => {
         storage: body.storage,
         image1: body.image1,
         image2: body.image2,
-        image3: body.image3
+        image3: body.image3,
+        //boxImage: body.boxImage,
       }
     })
 
@@ -58,7 +56,8 @@ export const updateProduct: RequestHandler = async (req, res) => {
           storage: body.storage,
           image1: body.image1,
           image2: body.image2,
-          image3: body.image3
+          image3: body.image3,
+          //boxImage: body.boxImage,
         },
       });
       
@@ -115,27 +114,24 @@ export const getIdProducts: RequestHandler = async (req, res) => {
 
 export const advancedSearchProducts: RequestHandler = async (req, res) => {
   try {
-    const { keyword, category, brand, minPrice, maxPrice } = req.query;
+    const { name, category, brand, price } = req.query;
 
-    // Build the search filters based on the provided criteria
-    const filters = {
-      name: keyword ? { contains: keyword } : undefined,
-      category: category ? { equals: category } : undefined,
-      brand: brand ? { equals: brand } : undefined,
-      price: {
-        gte: minPrice ? parseFloat(minPrice.toString()) : undefined,
-        lte: maxPrice ? parseFloat(maxPrice.toString()) : undefined,
-      },
-    };
-
-    // Find products matching the search filters
     const products = await prisma.product.findMany({
-      where: filters,
+      where: {
+        name: name ? { contains: name as string } : undefined,
+        category: category ? { id: parseInt(category as string) } : undefined,
+        brand: brand ? { id: parseInt(brand as string) } : undefined,
+        price: price ? { equals: parseFloat(price as string) } : undefined,
+      },
+      include: {
+        category: true,
+        brand: true,
+      },
     });
 
     return res.status(201).json({ products });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Error performing advanced search' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Error fetching products from database' });
   }
 };

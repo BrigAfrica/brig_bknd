@@ -1,27 +1,26 @@
 import { RequestHandler } from "express";
 import { prisma} from 'services/db';
-import { repairDetailsSchema } from "schemas/repairs";
 
 
 
 export const repairAppointmentForm: RequestHandler = async (req, res) => {
   try {
-    //const { body } = req;
-    const { firstname, surname, email, phone, deviceType, service, dateAvailable, timeAvailable, fileSource, fileUrl, updates} = req.body;
+    const { body } = req;
+    //const { firstname, surname, email, phone, deviceType, service, dateAvailable, timeAvailable, fileSource, fileUrl, updates} = req.body;
 
     await prisma.repairs.create({
       data: {
-        firstname,
-        surname,
-        email,
-        phone,
-        deviceType,
-        service,
-        dateAvailable,
-        timeAvailable,
-        fileSource,
-        fileUrl,
-        updates
+        firstname: body.firstname,
+        surname: body.surname,
+        email: body.email,
+        phone: body.phone,
+        deviceType: body.deviceType,
+        service: body.service,
+        dateAvailable: body.dateAvailable,
+        timeAvailable: body.timeAvailable,
+        fileSource: body.fileSource,
+        fileUrl: body.fileUrl,
+        updates: body.updates
       }
     })
 

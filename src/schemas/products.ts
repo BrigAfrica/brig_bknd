@@ -25,5 +25,6 @@ export const productSchema = z.object({
     image1: z.string().optional(),
     image2: z.string().optional(),
     image3: z.string().optional(),
+    boxImage: z.string().optional(),
   })
 })
