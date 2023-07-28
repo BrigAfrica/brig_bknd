@@ -17,8 +17,8 @@ export const loginUser: RequestHandler = async (req, res, next) => {
           const error = new Error('Something went wrong.');
           return next(error);
         }
-        if(!user){
-          return res.status(401).json({detail: "Invalid Username/password"})
+        if (!user) {
+          return res.status(401).json({ detail: "Invalid Username/password" })
         }
         req.login(
           user,
@@ -45,7 +45,15 @@ export const loginUser: RequestHandler = async (req, res, next) => {
 export const signupUser: RequestHandler = async (req, res) => {
   const { email, name, password } = req.body;
   const hashedPassword = await argon.hash(password);
-  const user = await prisma.user.create({
+  let user = await prisma.user.findUnique({
+    where: {
+      email
+    }
+  })
+  if (user) {
+    return res.status(400).json({ detail: "User already exists" })
+  }
+  user = await prisma.user.create({
     data: {
       email,
       name,
