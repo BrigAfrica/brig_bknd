@@ -13,15 +13,17 @@ model brig_newsletter {
 }
 
 model brand {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  product   product[]
 }
 
 model category {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  product   product[]
 }
 
 model repairs {
@@ -54,36 +56,6 @@ model User {
 enum UserRole{
   user
   admin
-}
-
-model repairs {
-  id            Int      @id @default(autoincrement())
-  firstname     String
-  surname       String
-  email         String   @unique
-  phone         String
-  deviceType    String
-  service       String
-  dateAvailable String
-  timeAvailable String
-  fileSource    String
-  fileUrl       String?
-  updates       Boolean
-  createdAt     DateTime @default(now())
-}
-
-model category {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime  @default(now())
-  product   product[]
-}
-
-model brand {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime  @default(now())
-  product   product[]
 }
 
 model product {
