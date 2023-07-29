@@ -1,11 +1,12 @@
 import * as dotenv from 'dotenv'
-// load environment variables
 dotenv.config();
 import { DEBUG, PORT } from 'config';
 import express from "express";
 import morgan from "morgan";
-import setupRoutes from 'routes';
 import helmet from "helmet";
+import 'services/passport'
+import baseRouter from 'routes';
+
 
 const port = PORT // default port to listen
 const app = express();
@@ -22,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 // adds all routes to the express app
-setupRoutes(app);
+app.use(baseRouter);
 
 // start the Express server
 app.listen(port, () => {

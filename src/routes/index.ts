@@ -1,17 +1,19 @@
-import { Express, Router } from "express"; 'express';
+import { Router } from "express"; 'express';
 import validateSchema from 'middlewares/validateSchema';
 import { emailSchema } from 'schemas/emails';
 import { repairDetailsSchema } from 'schemas/repairs';
 import { categorySchema, brandSchema, productSchema } from 'schemas/products';
 import { addEmailToNewsletter } from 'controllers/emails.controller';
+import authRouter from "./auth.router";
+
 import { repairAppointmentForm } from 'controllers/repairs.controller';
 import { addCategory, updateCategory, deleteCategory, getAllCategories } from 'controllers/category.controller';
 import { addBrand, updateBrand, deleteBrand, getAllBrands } from 'controllers/brands.controller';
 import { addProduct, updateProduct, deleteProduct, getAllProducts, getIdProducts, advancedSearchProducts } from 'controllers/products.controller';
 
-const setupRoutes = (app: Express) => {
-  const baseRouter = Router();
-  baseRouter.post('/emails', validateSchema(emailSchema), addEmailToNewsletter)
+const baseRouter = Router();
+baseRouter.use('/auth', authRouter);
+baseRouter.post('/emails', validateSchema(emailSchema), addEmailToNewsletter)
   baseRouter.post('/bookRepairAppointment', validateSchema(repairDetailsSchema), repairAppointmentForm)
   baseRouter.post('/addCategory', validateSchema(categorySchema), addCategory)
   baseRouter.put('/updateCategory/:id', validateSchema(categorySchema), updateCategory)
@@ -28,8 +30,4 @@ const setupRoutes = (app: Express) => {
   baseRouter.get('/getIdProducts/:id', getIdProducts)
   baseRouter.get('/products/search', advancedSearchProducts);
 
-  // apply routers
-  app.use('/', baseRouter);
-}
-
-export default setupRoutes;
+export default baseRouter;
