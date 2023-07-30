@@ -7,24 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model brig_newsletter {
+model Newsletter {
   id    Int    @id @default(autoincrement())
   email String @unique @db.VarChar(255)
+
+  @@map("brig_newsletter")
 }
 
-model brand {
-  id        Int      @id @default(autoincrement())
+model Brand {
+  id        Int       @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  product   Product[]
+
+  @@map("brand")
 }
 
-model category {
-  id        Int      @id @default(autoincrement())
+model Category {
+  id        Int       @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  product   Product[]
+
+  @@map("category")
 }
 
-model repairs {
+model Repairs {
   id            Int      @id @default(autoincrement())
   firstname     String
   surname       String
@@ -38,20 +46,98 @@ model repairs {
   fileUrl       String?
   updates       Boolean
   createdAt     DateTime @default(now())
+
+  @@map("repairs")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String     @unique
   password  String?
-  role      UserRole[]  @default([user])
-  active    Boolean     @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  role      UserRole[] @default([user])
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Order     Order[]
+  Payment   Payment[]
 }
 
-enum UserRole{
+enum UserRole {
   user
   admin
+}
+
+enum OrderStatus {
+  pending
+  failed
+  completed
+}
+
+enum PaymentStatus {
+  pending
+  failed
+  completed
+}
+
+enum OrderType {
+  pick_up
+  delivery
+}
+
+model Product {
+  id          Int               @id @default(autoincrement())
+  name        String
+  price       Decimal
+  categoryId  Int               @map("category_id")
+  category    Category          @relation(fields: [categoryId], references: [id])
+  brandId     Int               @map("brand_id")
+  brand       Brand             @relation(fields: [brandId], references: [id])
+  quantity    Int
+  description String?
+  memory      String?
+  storage     String?
+  image1      String?
+  image2      String?
+  image3      String?
+  boxImage    String?
+  orders      ProductsOnOrder[]
+
+  @@map("product")
+}
+
+model Order {
+  id           String            @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  products     ProductsOnOrder[]
+  address      String
+  phone_number String?
+  user         User              @relation(fields: [userId], references: [id])
+  userId       Int
+  type         OrderType
+  status       OrderStatus       @default(pending)
+  payment      Payment?          @relation(fields: [paymentId], references: [id])
+  trackingId  String?
+  createdAt    DateTime          @default(now())
+  paymentId    String?           @db.VarChar(22)
+}
+
+model ProductsOnOrder {
+  product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId Int
+  orderId   String
+  quantity  Int
+
+  @@id([productId, orderId])
+}
+
+model Payment {
+  id           String        @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  status       PaymentStatus
+  Order        Order[]
+  referenceId String
+  amount       Int
+  currency     String        @default("NGN")
+  user         User          @relation(fields: [userId], references: [id])
+  userId       Int
 }

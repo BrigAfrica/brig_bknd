@@ -4,8 +4,7 @@ import { prisma, sql } from 'services/db';
 export const addEmailToNewsletter: RequestHandler = async (req, res) => {
   const { email } = req.body;
   try {
-    // const count = await sql`SELECT COUNT(email) FROM brig_newsletter WHERE email = (${email})`;
-    const count = await prisma.brig_newsletter.findFirst({
+    const count = await prisma.newsletter.findFirst({
       where: {
         email: email
       }
@@ -13,8 +12,7 @@ export const addEmailToNewsletter: RequestHandler = async (req, res) => {
     if (count) {
       return res.status(400).json({ message: 'Email in db' });
     }
-    // await sql`INSERT INTO brig_newsletter (email) VALUES (${email})`;
-    await prisma.brig_newsletter.create({
+    await prisma.newsletter.create({
       data: {
         email
       }

@@ -3,7 +3,7 @@ import passport from "passport";
 import { AuthenticateCallback } from "passport";
 import jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "config";
-import * as argon from 'argon2';
+import * as argon from "argon2";
 import { prisma } from "services/db";
 import { User } from "@prisma/client";
 
