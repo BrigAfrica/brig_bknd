@@ -5,7 +5,7 @@ export const addProduct: RequestHandler = async (req, res) => {
   try {
     const { body } = req;
     
-    const count = await prisma.Product.findFirst({
+    const count = await prisma.product.findFirst({
       where: {
         name: body.name
       }
@@ -14,7 +14,7 @@ export const addProduct: RequestHandler = async (req, res) => {
       return res.status(400).json({ message: 'Product already in db' });
     }
 
-    await prisma.Product.create({
+    await prisma.product.create({
       data: {
         name: body.name,
         price: body.price,
