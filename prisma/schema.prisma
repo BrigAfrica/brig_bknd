@@ -116,7 +116,7 @@ model Order {
   type         OrderType
   status       OrderStatus       @default(pending)
   payment      Payment?          @relation(fields: [paymentId], references: [id])
-  tracking_id  String?
+  trackingId  String?
   createdAt    DateTime          @default(now())
   paymentId    String?           @db.VarChar(22)
 }
@@ -135,7 +135,7 @@ model Payment {
   id           String        @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
   status       PaymentStatus
   Order        Order[]
-  reference_id String
+  referenceId String
   amount       Int
   currency     String        @default("NGN")
   user         User          @relation(fields: [userId], references: [id])
