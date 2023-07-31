@@ -5,7 +5,7 @@ export const addProduct: RequestHandler = async (req, res) => {
   try {
     const { body } = req;
     
-    const count = await prisma.Product.findFirst({
+    const count = await prisma.product.findFirst({
       where: {
         name: body.name
       }
@@ -14,7 +14,7 @@ export const addProduct: RequestHandler = async (req, res) => {
       return res.status(400).json({ message: 'Product already in db' });
     }
 
-    await prisma.Product.create({
+    await prisma.product.create({
       data: {
         name: body.name,
         price: body.price,
@@ -43,7 +43,7 @@ export const updateProduct: RequestHandler = async (req, res) => {
       const { id } = req.params;
       const { body } = req;
 
-      const updatedProduct = await prisma.Product.update({
+      const updatedProduct = await prisma.product.update({
         where: { id: Number(id) },
         data: { 
           name: body.name,
@@ -72,7 +72,7 @@ export const deleteProduct: RequestHandler = async (req, res) => {
   try {
       const { id } = req.params;
   
-      await prisma.Product.delete({
+      await prisma.product.delete({
           where: { id: Number(id) },
       });
       
@@ -85,7 +85,7 @@ export const deleteProduct: RequestHandler = async (req, res) => {
 
 export const getAllProducts: RequestHandler = async (req, res) => {
   try {
-      const prod = await prisma.Product.findMany();
+      const prod = await prisma.product.findMany();
 
       return res.status(201).json({ prod });
   } catch (err) {
@@ -97,7 +97,7 @@ export const getAllProducts: RequestHandler = async (req, res) => {
 export const getIdProducts: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await prisma.Product.findUnique({
+    const product = await prisma.product.findUnique({
       where: { id: parseInt(id) },
     });
 
@@ -116,7 +116,7 @@ export const advancedSearchProducts: RequestHandler = async (req, res) => {
   try {
     const { name, category, brand, price } = req.query;
 
-    const products = await prisma.Product.findMany({
+    const products = await prisma.product.findMany({
       where: {
         name: name ? { contains: name as string } : undefined,
         category: category ? { id: parseInt(category as string) } : undefined,
