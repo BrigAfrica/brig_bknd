@@ -1,9 +1,10 @@
 import * as dotenv from 'dotenv'
 dotenv.config();
-import { DEBUG, PORT } from 'config';
+import { DEBUG, PORT, corsOptions } from 'config';
 import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
+import cors from "cors";
 import 'services/passport'
 import baseRouter from 'routes';
 
@@ -12,6 +13,7 @@ const port = PORT // default port to listen
 const app = express();
 
 app.use(helmet())
+app.use(cors(corsOptions))
 app.use(morgan(DEBUG ? 'dev' : 'combined'))
 // middlewares for parsing json and urlencoded form data
 app.use(express.urlencoded({ extended: true }))
