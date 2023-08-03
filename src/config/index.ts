@@ -5,7 +5,7 @@ export const DEBUG = process.env.NODE_ENV !== 'production'
 export const JWT_SECRET = process.env.JWT_SECRET || ''
 
 const whitelist = [
-  'https://brigfrontend.onrender.com/signin',
+  'https://brigfrontend.onrender.com',
   'http://localhost:3000'
 ]
 
