@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { prisma, sql } from 'services/db';
+import { prisma } from 'services/db';
 
 export const addEmailToNewsletter: RequestHandler = async (req, res) => {
   const { email } = req.body;

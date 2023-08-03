@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "postinstall": "npm run generate-schema",
     "build": "tsc && tsc-alias",
     "prestart": "npm run build",
     "dev": "tsnd -r tsconfig-paths/register --respawn --transpile-only --exit-child --watch src src/index.ts",
