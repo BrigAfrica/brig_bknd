@@ -5,6 +5,7 @@ import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import 'services/passport'
+import cors from 'cors';
 import baseRouter from 'routes';
 
 
@@ -13,6 +14,12 @@ const app = express();
 
 app.use(helmet())
 app.use(morgan(DEBUG ? 'dev' : 'combined'))
+app.use(cors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    allowedHeaders: 'Content-Type,Authorization',
+}))
 // middlewares for parsing json and urlencoded form data
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
