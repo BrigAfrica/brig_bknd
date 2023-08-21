@@ -6,7 +6,6 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import 'services/passport'
-import cors from 'cors';
 import baseRouter from 'routes';
 
 
@@ -14,7 +13,7 @@ const port = PORT // default port to listen
 const app = express();
 
 app.use(helmet())
-app.use(cors(corsOptions))
+//app.use(cors(corsOptions))
 app.use(morgan(DEBUG ? 'dev' : 'combined'))
 app.use(cors({
     origin: '*',
