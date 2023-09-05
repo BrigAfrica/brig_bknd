@@ -154,11 +154,11 @@ export const imageUpload: RequestHandler = async (req, res, next) => {
     const result = await cloudinary.uploader.upload(base64String, { resource_type: 'image' })
     //console.log(result);
 
-    res.json({ imageUrl: result.secure_url });
+    return res.json({ imageUrl: result.secure_url });
   }
   catch (error) {
     console.error('Error uploading image to Cloudinary:', error);
     // Handle the error and return an appropriate response
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
