@@ -1,9 +1,16 @@
-import { RequestHandler } from "express";
+import { RequestHandler, Express } from "express";
 import { prisma } from 'services/db';
+import cloudinary from 'config/cloudinaryConfig';
+
+const bufferToBase64 = (buffer: Buffer) => {
+  return buffer.toString('base64');
+};
 
 export const addProduct: RequestHandler = async (req, res) => {
   try {
     const { body } = req;
+
+    console.log(body);
     
     const count = await prisma.product.findFirst({
       where: {
@@ -27,7 +34,7 @@ export const addProduct: RequestHandler = async (req, res) => {
         image1: body.image1,
         image2: body.image2,
         image3: body.image3,
-        //boxImage: body.boxImage,
+        boxImage: body.boxImage,
       }
     })
 
@@ -133,5 +140,25 @@ export const advancedSearchProducts: RequestHandler = async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Error fetching products from database' });
+  }
+};
+
+export const imageUpload: RequestHandler = async (req, res, next) => {
+  try
+  {
+    if(!req.file){
+      return res.status(400).json({ message: 'No image uploaded' });
+    }
+    const base64String = bufferToBase64(req.file.buffer);
+
+    const result = await cloudinary.uploader.upload(base64String, { resource_type: 'image' })
+    //console.log(result);
+
+    res.json({ imageUrl: result.secure_url });
+  }
+  catch (error) {
+    console.error('Error uploading image to Cloudinary:', error);
+    // Handle the error and return an appropriate response
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
