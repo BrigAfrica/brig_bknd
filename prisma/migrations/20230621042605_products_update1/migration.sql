@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "product" ALTER COLUMN "memory" DROP NOT NULL,
-ALTER COLUMN "storage" DROP NOT NULL;

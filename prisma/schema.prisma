@@ -102,6 +102,7 @@ model Product {
   image3      String?
   boxImage    String?
   orders      ProductsOnOrder[]
+  deals              Deal[]
 
   @@map("product")
 }
@@ -140,4 +141,27 @@ model Payment {
   currency     String        @default("NGN")
   user         User          @relation(fields: [userId], references: [id])
   userId       Int
+}
+
+model Deal {
+  id                 Int      @id @default(autoincrement())
+  discountPercentage Int
+  originalPrice      Float
+  discountedPrice    Float
+  startDate          DateTime
+  endDate            DateTime
+  availableQuantity  Int
+  status             DealStatus
+  priority           Int
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  productId          Int       @map("product_id")
+  product            Product   @relation(fields: [productId], references: [id])
+}
+
+enum DealStatus {
+  ACTIVE
+  EXPIRED
+  PENDING
 }
