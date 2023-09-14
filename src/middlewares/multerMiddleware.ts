@@ -1,6 +1,10 @@
 import multer from 'multer';
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage }).single('image');
+const storage = multer.diskStorage({
+    filename: function(req, file, cb){
+        cb(null, new Date().getTime() + file.originalname)
+    }
+}); 
+const upload = multer({ storage: storage });
 
 export default { upload };

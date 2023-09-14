@@ -103,6 +103,7 @@ model Product {
   boxImage    String?
   orders      ProductsOnOrder[]
   deals              Deal[]
+  carts       ProductCart[]
 
   @@map("product")
 }
@@ -164,4 +165,21 @@ enum DealStatus {
   ACTIVE
   EXPIRED
   PENDING
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  products  ProductCart[]
+}
+
+model ProductCart {
+  id         Int       @id @default(autoincrement())
+  productId   Int
+  cartId     Int
+  quantity   Int
+  product    Product   @relation(fields: [productId], references: [id])
+  cart       Cart      @relation(fields: [cartId], references: [id])
 }
