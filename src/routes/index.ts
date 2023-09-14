@@ -12,7 +12,7 @@ import { addBrand, updateBrand, deleteBrand, getAllBrands } from 'controllers/br
 import { addProduct, updateProduct, deleteProduct, getAllProducts, getIdProducts, advancedSearchProducts, imageUpload } from 'controllers/products.controller';
 import { addDeal, getAllDeals, getActiveDeals } from 'controllers/deal.controller';
 import ordersRouter from "./orders.router";
-// import multerUplaods from 'middlewares/multerMiddleware';
+import cartRouter from "./cart.router";
 import { createDealSchema } from "schemas/deals";
 
 const storage = multer.memoryStorage();
@@ -21,6 +21,7 @@ const upload = multer({ storage: storage });
 const baseRouter = Router();
   baseRouter.use('/auth', authRouter);
   baseRouter.use('/orders', ordersRouter);
+  baseRouter.use('/cart', cartRouter);
   baseRouter.post('/emails', validateSchema(emailSchema), addEmailToNewsletter);
   baseRouter.post('/bookRepairAppointment', validateSchema(repairDetailsSchema), repairAppointmentForm);
   baseRouter.post('/addCategory', validateSchema(categorySchema), addCategory);
@@ -37,7 +38,7 @@ const baseRouter = Router();
   baseRouter.get('/getAllProducts', getAllProducts);
   baseRouter.get('/getIdProducts/:id', getIdProducts);
   baseRouter.get('/products/search', advancedSearchProducts);
-  //baseRouter.post('/product/imageUpload', upload.single('image'), imageUpload);
+  baseRouter.post('/product/imageUpload', upload.single('image'), imageUpload);
   baseRouter.post('/addDeal', validateSchema(createDealSchema), addDeal);
   baseRouter.get('/getAllDeals', getAllDeals);
   baseRouter.get('/deals/active', getActiveDeals);

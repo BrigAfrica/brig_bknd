@@ -1,6 +1,8 @@
 import { RequestHandler, Express } from "express";
 import { prisma } from 'services/db';
 import cloudinary from 'config/cloudinaryConfig';
+import upload from '../middlewares/multerMiddleware';
+//import toStream from 'buffer'
 
 const bufferToBase64 = (buffer: Buffer) => {
   return buffer.toString('base64');
@@ -143,22 +145,36 @@ export const advancedSearchProducts: RequestHandler = async (req, res) => {
   }
 };
 
-export const imageUpload: RequestHandler = async (req, res, next) => {
+export const imageUpload: RequestHandler = async (req, res) => {
   try
   {
+    console.log('Request received');
+    console.log(req.file);
+
+    const imageBuffer = req.file?.buffer;
+
     if(!req.file){
-      return res.status(400).json({ message: 'No image uploaded' });
+      return res.status(400).json({ success: false, message: 'No image uploaded' });
     }
-    const base64String = bufferToBase64(req.file.buffer);
 
-    const result = await cloudinary.uploader.upload(base64String, { resource_type: 'image' })
-    //console.log(result);
+    cloudinary.uploader
+      .upload_stream({ resource_type: 'auto' }, (error, result) => {
+        if (error) {
+          console.error('Error uploading image to Cloudinary:', error);
+          return res.status(500).json({ success: false, message: 'Error uploading image' });
+        }
 
-    return res.json({ imageUrl: result.secure_url });
+        console.log('Image uploaded to Cloudinary:', result);
+
+        const imageUrl = result?.secure_url;
+
+        res.status(200).json({ success: true, message: 'Image uploaded successfully', imageUrl });
+      })
+      .end(imageBuffer)
   }
   catch (error) {
     console.error('Error uploading image to Cloudinary:', error);
-    // Handle the error and return an appropriate response
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
