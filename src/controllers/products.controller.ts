@@ -19,6 +19,7 @@ export const addProduct: RequestHandler = async (req, res) => {
         name: body.name
       }
     })
+    console.log(count);
     if (count) {
       return res.status(400).json({ message: 'Product already in db' });
     }
@@ -121,6 +122,36 @@ export const getIdProducts: RequestHandler = async (req, res) => {
   }
 }
 
+export const getProductByCategory: RequestHandler = async (req, res) => {
+  try {
+    const { categoryName } = req.params;
+    const category = await prisma.category.findFirst({
+      where: {
+        name: categoryName,
+      },
+    });
+
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        categoryId: category.id,
+      },
+      include: {
+        category: true,
+        brand: true,
+      },
+    });
+
+    return res.json(products);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
 export const advancedSearchProducts: RequestHandler = async (req, res) => {
   try {
     const { name, category, brand, price } = req.query;
@@ -171,6 +202,8 @@ export const imageUpload: RequestHandler = async (req, res) => {
         res.status(200).json({ success: true, message: 'Image uploaded successfully', imageUrl });
       })
       .end(imageBuffer)
+
+    
   }
   catch (error) {
     console.error('Error uploading image to Cloudinary:', error);
