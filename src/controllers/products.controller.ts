@@ -187,23 +187,20 @@ export const imageUpload: RequestHandler = async (req, res) => {
     if(!req.file){
       return res.status(400).json({ success: false, message: 'No image uploaded' });
     }
-
-    cloudinary.uploader
+    else{
+      cloudinary.uploader
       .upload_stream({ resource_type: 'auto' }, (error, result) => {
         if (error) {
           console.error('Error uploading image to Cloudinary:', error);
-          return res.status(500).json({ success: false, message: 'Error uploading image' });
+          res.status(500).json({ success: false, message: 'Error uploading image' });
+        } else {
+          console.log('Image uploaded to Cloudinary:', result);
+          const imageUrl = result?.secure_url;
+          res.status(200).json({ success: true, message: 'Image uploaded successfully', imageUrl });
         }
-
-        console.log('Image uploaded to Cloudinary:', result);
-
-        const imageUrl = result?.secure_url;
-
-        res.status(200).json({ success: true, message: 'Image uploaded successfully', imageUrl });
-      })
-      .end(imageBuffer)
-
-    
+      }).end(imageBuffer)
+    }
+    return res;
   }
   catch (error) {
     console.error('Error uploading image to Cloudinary:', error);
