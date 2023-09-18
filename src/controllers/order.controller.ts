@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, OrderStatus } from "@prisma/client";
 import { RequestHandler } from "express";
 import { createOrderSchema } from "schemas/orders";
 import { prisma } from "services/db";
@@ -25,6 +25,7 @@ export const createOrder: RequestHandler = async (req, res) => {
         type: order_type,
       }
     });
+    
     res.status(201).json({ success: true, message: 'Order created successfully', order: order });
   }catch (error) {
     console.error('Error creating order:', error);
@@ -60,5 +61,42 @@ export const getOrdersById: RequestHandler = async (req, res) => {
       console.error(err);
       return res.status(500).json({ message: 'Error fetching products from database' });
   }
+}
+
+export const getOrdersByStatus: RequestHandler = async (req, res) => {
+  const { status } = req.params;
+
+  if (Object.values(OrderStatus).includes(status as OrderStatus)) {
+    try {
+      const orders = await prisma.order.findMany({
+        where: {
+          status: status as OrderStatus, // Cast the status to OrderStatus
+        },
+      });
+
+      res.json(orders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  } else {
+    res.status(400).json({ error: 'Invalid status parameter' });
+  }
+
+  // try {
+    
+  //   const product = await prisma.order.findMany({
+  //     where: { status: status },
+  //   });
+
+  //   if (!product) {
+  //     return res.status(404).json({ message: 'Product not found' });
+  //   }
+
+  //   return res.status(201).json({ product });
+  // } catch (err) {
+  //     console.error(err);
+  //     return res.status(500).json({ message: 'Error fetching products from database' });
+  // }
 }
 
