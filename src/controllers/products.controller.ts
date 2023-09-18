@@ -135,7 +135,7 @@ export const getProductByCategory: RequestHandler = async (req, res) => {
       return res.status(404).json({ message: 'Category not found' });
     }
 
-    const products = await prisma.product.findMany({
+    const prod = await prisma.product.findMany({
       where: {
         categoryId: category.id,
       },
@@ -145,7 +145,7 @@ export const getProductByCategory: RequestHandler = async (req, res) => {
       },
     });
 
-    return res.json(products);
+    return res.json({ prod });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal Server Error' });
