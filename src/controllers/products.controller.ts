@@ -208,3 +208,28 @@ export const imageUpload: RequestHandler = async (req, res) => {
   }
 };
 
+export const getMultipleProducts: RequestHandler = async (req, res) => {
+  try {
+    const idsParam = req.query.ids as string; // Explicitly cast to string
+    console.log(idsParam);
+    const productIds = idsParam.split(',').map((id) => parseInt(id.trim(), 10));
+
+    const products = await prisma.product.findMany({
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+    });
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'Products not found' });
+    }
+
+    return res.status(200).json({ products });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Error fetching products from the database' });
+  }
+};
+
