@@ -9,7 +9,7 @@ import { addEmailToNewsletter } from 'controllers/emails.controller';
 import { repairAppointmentForm } from 'controllers/repairs.controller';
 import { addCategory, updateCategory, deleteCategory, getAllCategories } from 'controllers/category.controller';
 import { addBrand, updateBrand, deleteBrand, getAllBrands } from 'controllers/brands.controller';
-import { addProduct, updateProduct, deleteProduct, getAllProducts, getIdProducts, advancedSearchProducts, imageUpload, getProductByCategory } from 'controllers/products.controller';
+import { addProduct, updateProduct, deleteProduct, getAllProducts, getIdProducts, advancedSearchProducts, imageUpload, getProductByCategory, getMultipleProducts } from 'controllers/products.controller';
 import { addDeal, getAllDeals, getActiveDeals } from 'controllers/deal.controller';
 import ordersRouter from "./orders.router";
 import cartRouter from "./cart.router";
@@ -43,5 +43,6 @@ const baseRouter = Router();
   baseRouter.post('/addDeal', validateSchema(createDealSchema), addDeal);
   baseRouter.get('/getAllDeals', getAllDeals);
   baseRouter.get('/deals/active', getActiveDeals);
+  baseRouter.get('/getMultipleProducts', getMultipleProducts);
 
 export default baseRouter;
