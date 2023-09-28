@@ -85,6 +85,14 @@ export const getActiveDeals: RequestHandler =async (req, res) => {
         },
         status: 'ACTIVE',
       },
+      include: {
+        product: {
+          select: {
+            name: true,
+            boxImage: true,
+          },
+        },
+      },
     });
 
     res.status(200).json(activeDeals);
