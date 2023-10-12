@@ -154,20 +154,63 @@ export const getProductByCategory: RequestHandler = async (req, res) => {
 
 export const advancedSearchProducts: RequestHandler = async (req, res) => {
   try {
-    const { name, category, brand, price } = req.query;
+    const { search, page, perPage } = req.query;
+    const pageNumber = parseInt(page as string) || 1; // Current page number, default to 1
+    const itemsPerPage = parseInt(perPage as string) || 10;
+
+    const skip = (pageNumber - 1) * itemsPerPage;
 
     const products = await prisma.product.findMany({
       where: {
-        name: name ? { contains: name as string } : undefined,
-        category: category ? { id: parseInt(category as string) } : undefined,
-        brand: brand ? { id: parseInt(brand as string) } : undefined,
-        price: price ? { equals: parseFloat(price as string) } : undefined,
+        OR: [
+          {
+            name: {
+              contains: search as string,
+              mode: 'insensitive', // Case-insensitive search
+            },
+          },
+          {
+            description: {
+              contains: search as string,
+              mode: 'insensitive',
+            },
+          },
+          {
+            memory: {
+              contains: search as string,
+              mode: 'insensitive',
+            },
+          },
+          {
+            storage: {
+              contains: search as string,
+              mode: 'insensitive',
+            },
+          },
+          // Add more fields to search if needed
+        ],
       },
+      skip, // Number of items to skip
+      take: itemsPerPage, // Number of items to take
       include: {
         category: true,
         brand: true,
+        // Include other related data as needed
       },
     });
+
+    // const products = await prisma.product.findMany({
+    //   where: {
+    //     name: name ? { contains: name as string } : undefined,
+    //     category: category ? { id: parseInt(category as string) } : undefined,
+    //     brand: brand ? { id: parseInt(brand as string) } : undefined,
+    //     price: price ? { equals: parseFloat(price as string) } : undefined,
+    //   },
+    //   include: {
+    //     category: true,
+    //     brand: true,
+    //   },
+    // });
 
     return res.status(201).json({ products });
   } catch (err) {
